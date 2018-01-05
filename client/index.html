@@ -14,20 +14,52 @@
     <div id="root"></div>
     <!-- <script crossorigin type="text/babel" src="index.jsx"></script> -->
     <script type="text/babel">
-      const App = () => (
-        <div>
-          <h1>Is it a Sandwich</h1>
-          <h2>An oreo</h2>
-          <button type="button">No</button>
-          <button type="button">Yes</button>
-        </div>
-      )
+    class App extends React.Component {
+      constructor() {
+        super();
+        this.state = {
+          sandwich: {
+            name:'ham and cheese on rye',
+            id: 0,
+            yesVotes: 0;
+            noVotes: 0;
+          }
+        }
+      }
 
-      ReactDOM.render(
-        <App />,
-        document.getElementById('root')
-      );
+      render() {
+        return (
+          <div>
+            <h1>Is it a Sandwich</h1>
+            <h2>{this.state.sandwich.name}</h2>
+            <button type="button" onClick={ () => {
+              this.vote(this.state.sandwich.id, 'N')
+              this.getNewSandwich.bind(this)();
+            }}>No</button>
+            <button type="button" onClick={ () => {
+              this.vote(this.state.sandwich.id, 'Y')
+              this.getNewSandwich.bind(this)();
+            }}>Yes</button>
+          </div>
+        )
+      }
 
+      getNewSandwich() {
+        $.get('http://127.0.0.1:3000', x => {
+          this.setState({sandwich: JSON.parse(x)})
+        });
+      }
+
+      vote(sandoId, vote) {
+        $.post(`http://127.0.0.1:3000/data/${sandoId}-${vote}`);
+      }
+
+    }
+
+    ReactDOM.render(
+      <App />,
+      document.getElementById('root')
+    );
     </script>
 
     <!--
