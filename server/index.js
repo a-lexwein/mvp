@@ -1,4 +1,5 @@
 var express = require('express')
+var db = require('../db/index.js')
 var app = express()
 
 // respond with "hello world" when a GET request is made to the homepage
@@ -19,8 +20,9 @@ app.use(function(req, res, next) {
 
 
 app.get('/', function (req, res) {
-  var sandwich = sandwiches[Math.floor(Math.random() * sandwiches.length)]
-  res.send(JSON.stringify(sandwich))
+  db.getASandwich( (err,x) => {
+    res.send(JSON.stringify(x[0]));
+  });
 })
 
 app.post('/data/:sandoId-:bool', function (req, res) {
